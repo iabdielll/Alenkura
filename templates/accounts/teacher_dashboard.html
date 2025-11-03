@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Docente</title>
+    <style>
+        :root {
+            color-scheme: light;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #0f172a, #111827);
+            min-height: 100vh;
+            display: flex;
+            color: #0f172a;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.32), transparent 60%),
+                radial-gradient(circle at 85% 10%, rgba(236, 72, 153, 0.28), transparent 55%);
+            pointer-events: none;
+        }
+        .layout {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+        .sidebar {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(18px);
+            padding: 2.5rem 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.25rem;
+            color: #e2e8f0;
+        }
+        .brand {
+            display: grid;
+            gap: 0.35rem;
+        }
+        .brand span {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        .brand small {
+            font-size: 0.95rem;
+            color: rgba(226, 232, 240, 0.65);
+        }
+        .user-summary {
+            background: rgba(79, 70, 229, 0.22);
+            border-radius: 16px;
+            padding: 1.1rem 1.2rem;
+            display: grid;
+            gap: 0.45rem;
+        }
+        .user-summary strong {
+            font-size: 1rem;
+        }
+        .user-summary span {
+            color: rgba(226, 232, 240, 0.78);
+            font-size: 0.9rem;
+        }
+        nav {
+            display: grid;
+            gap: 0.75rem;
+        }
+        .nav-btn {
+            border: none;
+            border-radius: 14px;
+            padding: 0.9rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: rgba(226, 232, 240, 0.85);
+            background: rgba(99, 102, 241, 0.18);
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease;
+        }
+        .nav-btn:hover {
+            transform: translateX(6px);
+            background: rgba(99, 102, 241, 0.35);
+        }
+        .nav-btn.active {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: #f8fafc;
+        }
+        .logout {
+            display: block;
+            width: 100%;
+            margin-top: auto;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            color: rgba(226, 232, 240, 0.8);
+            background: rgba(30, 41, 59, 0.75);
+            transition: background 0.12s ease, color 0.12s ease, transform 0.12s ease;
+        }
+        .logout:hover {
+            background: rgba(226, 232, 240, 0.18);
+            color: #f8fafc;
+            transform: translateY(-1px);
+        }
+        .content {
+            position: relative;
+            padding: 2.75rem clamp(2rem, 4vw, 4rem);
+            background: rgba(248, 250, 252, 0.95);
+            backdrop-filter: blur(22px);
+            display: grid;
+            gap: 2rem;
+        }
+        .heading h1 {
+            margin: 0;
+            font-size: clamp(1.85rem, 2.4vw, 2.4rem);
+            color: #1f2937;
+        }
+        .heading p {
+            margin: 0.6rem 0 0;
+            color: #6b7280;
+            max-width: 520px;
+        }
+        .panel {
+            animation: fade-in 0.35s ease;
+            display: grid;
+            gap: 1.5rem;
+        }
+        .table-wrapper {
+            background: rgba(255, 255, 255, 0.88);
+            border-radius: 18px;
+            padding: 1.6rem;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
+            overflow: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 560px;
+        }
+        th, td {
+            padding: 0.9rem 1rem;
+            text-align: left;
+        }
+        th {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #6b7280;
+        }
+        tbody tr {
+            border-top: 1px solid rgba(226, 232, 240, 0.9);
+            transition: background 0.2s ease;
+        }
+        tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.38rem 0.85rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #4338ca;
+            background: rgba(99, 102, 241, 0.12);
+        }
+        .chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.32rem 0.7rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.78rem;
+            background: rgba(79, 70, 229, 0.16);
+            color: #4338ca;
+        }
+        @media (max-width: 960px) {
+            .layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+            .sidebar {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.75rem 1.5rem;
+                gap: 1.5rem;
+            }
+            nav {
+                display: flex;
+                gap: 0.75rem;
+            }
+            .logout {
+                margin-top: 0;
+                padding-inline: 1.2rem;
+            }
+            .content {
+                padding: 2rem clamp(1.25rem, 5vw, 2.5rem);
+            }
+            table {
+                min-width: unset;
+            }
+        }
+        @media (max-width: 640px) {
+            nav {
+                flex-direction: column;
+                width: 100%;
+            }
+            .sidebar {
+                align-items: flex-start;
+            }
+        }
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <span>Alenkura</span>
+                <small>Panel docente</small>
+            </div>
+            <div class="user-summary">
+                <strong>{{ request.user.first_name|default:request.user.username }}</strong>
+                <span>Rol: {{ user_role }}</span>
+                <span>Cargo: {{ request.user.cargo|default:"Sin definir" }}</span>
+            </div>
+            <nav>
+                <button type="button" class="nav-btn active">Cursos</button>
+            </nav>
+            <form action="{% url 'logout' %}" method="post" style="margin:0;">
+                {% csrf_token %}
+                <button class="logout" type="submit">Cerrar sesión</button>
+            </form>
+        </aside>
+        <main class="content">
+            <header class="heading">
+                <h1>Bienvenido, {{ request.user.first_name|default:request.user.username }}</h1>
+                <p>Consulta los cursos disponibles, sus niveles y los docentes asignados. Mantente al día con tu equipo y las actividades planificadas.</p>
+            </header>
+            <section class="panel">
+                <div>
+                    <h2 style="margin:0;color:#1f2937;">Cursos activos</h2>
+                    <p style="margin:0.35rem 0 0;color:#6b7280;">Listado actualizado de cursos registrados en la plataforma.</p>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Nivel</th>
+                                <th>Docentes</th>
+                                <th>Año</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in courses %}
+                                <tr>
+                                    <td>{{ course.name }}</td>
+                                    <td><span class="badge">{{ course.get_level_display }}</span></td>
+                                    <td>
+                                        {% with teachers=course.teachers.all %}
+                                            {% if teachers %}
+                                                <div class="chip-list">
+                                                    {% for teacher in teachers %}
+                                                        <span class="chip">{{ teacher.first_name|default:teacher.username }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <span style="color:#6b7280;">Sin asignar</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                    <td>{{ course.year }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" style="text-align:center;color:#6b7280;">Aún no hay cursos registrados.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
