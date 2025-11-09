@@ -620,15 +620,13 @@
                             </ul>
                         {% endif %}
                         <div>
-                            <label for="{{ course_form.name.id_for_label }}">Nombre</label>
-                            {{ course_form.name }}
-                            {% if course_form.name.errors %}
-                                <ul class="errorlist">
-                                    {% for error in course_form.name.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                            <label for="{{ course_form.course.id_for_label }}">Seleccione curso</label>
+                            <select name="curso" id="curso">
+                                {% for curso in courses %}
+                                    <option value="{{ curso.id }}">{{ curso.name }}</option>
+                                {% endfor %}
+
+                            </select>
                         </div>
                         <div>
                             <label for="{{ course_form.level.id_for_label }}">Nivel</label>

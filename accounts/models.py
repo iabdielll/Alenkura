@@ -5,6 +5,8 @@ from django.db import models
 class User(AbstractUser):
     class Roles(models.TextChoices):
         ADMIN = 'ADMIN', 'Administrador'
+        DIRECTOR = 'DIRECTOR', 'Director'
+        COORDINATOR = 'COORDINADOR', 'Coordinador'
         TEACHER = 'TEACHER', 'Docente'
         PROFESSIONAL = 'PROFESSIONAL', 'Profesional'
 
@@ -20,20 +22,3 @@ class User(AbstractUser):
             self.role = self.Roles.ADMIN
         super().save(*args, **kwargs)
 
-
-class Course(models.Model):
-    class Levels(models.TextChoices):
-        BASIC = 'BASICO', 'Básico'
-        LABORAL = 'LABORAL', 'Laboral'
-
-    level = models.CharField(max_length=10, choices=Levels.choices, default=Levels.BASIC)
-    name = models.CharField(max_length=150)
-    year = models.PositiveSmallIntegerField()
-    teachers = models.ManyToManyField('accounts.User', related_name='courses', blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ('-year', 'name')
-
-    def __str__(self) -> str:
-        return f'{self.name} - {self.year}'

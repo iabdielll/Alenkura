@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import Course, User
+from .models import User
 
 
 @admin.register(User)
@@ -16,8 +16,3 @@ class UserAdmin(BaseUserAdmin):
     list_filter = BaseUserAdmin.list_filter + ('role',)
 
 
-@admin.register(Course)
-class CourseAdmin(admin.ModelAdmin):
-    list_display = ('name', 'level', 'year', 'created_at')
-    list_filter = ('level', 'year')
-    search_fields = ('name',)

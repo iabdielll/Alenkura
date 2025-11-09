@@ -2,10 +2,9 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Course
+from core.models import Course, Levels
 
 User = get_user_model()
-
 
 class UserCreateForm(UserCreationForm):
     first_name = forms.CharField(label='Nombre completo', max_length=150)
@@ -27,7 +26,7 @@ class UserCreateForm(UserCreationForm):
 
 
 class CourseForm(forms.ModelForm):
-    level = forms.ChoiceField(label='Nivel', choices=Course.Levels.choices)
+    level = forms.ChoiceField(label='Nivel', choices=Levels.choices)
     year = forms.IntegerField(label='Año', min_value=1900, max_value=2100)
     teachers = forms.ModelMultipleChoiceField(
         label='Docentes',
