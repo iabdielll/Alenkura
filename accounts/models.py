@@ -11,7 +11,11 @@ class User(AbstractUser):
         PROFESSIONAL = 'PROFESSIONAL', 'Profesional'
 
     role = models.CharField(max_length=20, choices=Roles.choices, default=Roles.TEACHER)
-    cargo = models.CharField(max_length=150, blank=True)
+    profesion = models.CharField(max_length=150, blank=True)
+    phone = models.IntegerField(max_length=20, blank=True)
+    address = models.CharField(max_length=255, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    #photo = models.ImageField(upload_to='user_photos/', null=True, blank=True)
 
     def __str__(self) -> str:
         full_name = self.get_full_name().strip()
@@ -22,3 +26,5 @@ class User(AbstractUser):
             self.role = self.Roles.ADMIN
         super().save(*args, **kwargs)
 
+    # def regEmail(self) -> str:
+    #     return f"{self.first_name.lower()}.{self.last_name.lower()}@alenkura.cl"

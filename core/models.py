@@ -30,14 +30,10 @@ class Course(DateTime):
     def __str__(self) -> str:
         return f'{self.name} - {self.created_at.year}'
     
-class SubjectCategory(models.TextChoices):
-    BASIC = 'BASICO', 'Básico'
-    LABORAL = 'LABORAL', 'Laboral'
-    
 class Subject(models.Model):
     name = models.CharField(max_length=150)
     code = models.CharField(max_length=64, null=True)
-    category = models.CharField(max_length=10, choices=SubjectCategory.choices, default=SubjectCategory.BASIC)
+    category = models.CharField(max_length=10, choices=Levels.choices, default=Levels.BASIC)
 
     class Meta:
         unique_together = [('category', 'code')]
@@ -51,4 +47,3 @@ class Axis(models.Model):
 
     def __str__(self) -> str:
         return self.name
-    
